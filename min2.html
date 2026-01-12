@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Ticket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <style>
+        .caja {
+            border: 4px solid red;
+            padding: 20px;
+            background-color: bisque;
+        }
+
+        .dato-ticket {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* ====== ESTILOS DE IMPRESIÓN ====== */
+        @media print {
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            /* SOLO EL TICKET */
+            #ticket,
+            #ticket * {
+                visibility: visible;
+            }
+
+            #ticket {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 80mm;   /* ancho tipo ticket */
+                padding: 10px;
+                border: none;  /* sin borde rojo */
+                background: white;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="container">
+
+<div class="row">
+
+    <!-- FORMULARIO -->
+    <div class="col s12 m6 l4 no-print">
+        <div class="caja">
+            <img src="min.jpg" width="90">
+
+            <div class="input-field">
+                <input type="text" id="nombretxt" onkeyup="actualizarNombre(this.value)">
+                <label for="nombretxt">Nombre del cliente</label>
+            </div>
+
+            <div class="input-field">
+                <select id="municipioId" onchange="actualizarMunicipio()">
+                    <option value="" disabled selected>Selecciona la colonia</option>
+                    <option value="Toluca">Armando Neyra Chavez</option>
+                </select>
+                <label>Colonia</label>
+            </div>
+
+            <div class="input-field">
+                <input type="number" id="totalTxt" onkeyup="actualizarTotal(this.value)">
+                <label for="totalTxt">Total ($)</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- TICKET -->
+    <div class="col s12 m6 l4">
+        <div class="caja center-align" id="ticket">
+            <img src="min.jpg" width="90">
+
+            <p class="dato-ticket">Tienda Red Cola</p>
+            <p class="dato-ticket" id="IRcliente">Cliente:</p>
+            <p class="dato-ticket" id="IRmunicipio">Colonia:</p>
+            <hr>
+            <p class="dato-ticket" id="IRtotal">Total: $0</p>
+
+            <button class="btn red no-print" onclick="window.print()">Imprimir Ticket</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Materialize JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('select');
+        M.FormSelect.init(elems);
+    });
+
+    function actualizarNombre(valor) {
+        document.getElementById('IRcliente').innerText = 'Cliente: ' + valor;
+    }
+
+    function actualizarMunicipio() {
+        let combo = document.getElementById('municipioId');
+        let seleccion = combo.options[combo.selectedIndex].text;
+        document.getElementById('IRmunicipio').innerText = 'Colonia: ' + seleccion;
+    }
+
+    function actualizarTotal(valor) {
+        document.getElementById('IRtotal').innerText = 'Total: $' + valor;
+    }
+</script>
+
+</body>
+</html>
